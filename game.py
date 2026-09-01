@@ -40,13 +40,21 @@ player_keys1 = {"left":pygame.K_a,"up":pygame.K_w,
 player_keys2 = {"left":pygame.K_LEFT,"up":pygame.K_UP,
                 "right":pygame.K_RIGHT, "down":pygame.K_DOWN}
  
-player1 = Player(x=200, y=300, keys=player_keys1, look=1)
-player2 = Player(x=300, y=300, keys=player_keys2, look=-1)
+player1 = Player(x=450, y=300, keys=player_keys1, look=1)
+player2 = Player(x=650, y=300, keys=player_keys2, look=-1)
+
+def reset(ball):
+    ball.pos = pygame.math.Vector2(WIDTH//2,HEIGHT//2)
+    ball.velocity = pygame.math.Vector2(0,0)
+    ball.owner = None
+    player1.rect.center = (450,300)
+    player2.rect.center = (650,300)
+    
  
 TACKLE_COOLDOWN_FRAMES = 40  
  
 def catch_ball(player, ball):
-    if ball.owner is not None:
+    if ball.owner is player:
         return
     if ball.catch_cooldown > 0:
         return
@@ -86,18 +94,17 @@ while True:
  
         print(score)
         text_surf_2 = font.render(f"2-ый Игрок:{score}",True,(0,0,0))
-        ball.pos = pygame.math.Vector2(WIDTH//2,HEIGHT//2)
-        ball.velocity = pygame.math.Vector2(0,0)
-        ball.owner = None
+        reset(ball)
+        
+
  
     if ball.rect.colliderect(goal2_rect):
         score2 += 1
  
         print(score2)
         text_surf_1 = font.render(f"1-ый Игрок: {score2}",True,(0,0,0))
-        ball.pos = pygame.math.Vector2(WIDTH//2,HEIGHT//2)
-        ball.velocity = pygame.math.Vector2(0,0)
-        ball.owner = None
+        reset(ball)
+
  
     """ ОТРИСОВКА """
     screen.blit(soccer_field_surf,(0,0))
