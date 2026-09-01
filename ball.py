@@ -24,10 +24,10 @@ class Ball:
 
         self.rect.center=(self.pos.x,self.pos.y)
 
-        if self.rect.top <= 0 or self.rect.bottom >= 600:
+        if self.rect.top <= 30 or self.rect.bottom >= 570:
             self.velocity *= -0.7
 
-        if self.rect.right >= 800 or self.rect.left <= 0:
+        if self.rect.right >= 1020 or self.rect.left <= 80:
             self.velocity *= -0.7
 
 
