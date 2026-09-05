@@ -16,14 +16,17 @@ class Player:
         if keys_pressed[self.keys["up"]]:
             direction.y -= 1
         if keys_pressed[self.keys["down"]]:
-            direction.y += 1
+            direction.y += 1        
  
         if direction.length() > 0:
             direction = direction.normalize()
             self.facing = direction   # <-- запоминаем направление
- 
+
         self.rect.x += direction.x * self.speed
         self.rect.y += direction.y * self.speed
+
+    def load_frames (self, folder):
+        
     
     def draw(self, screen, color):
         pygame.draw.rect(screen, color, self.rect)       

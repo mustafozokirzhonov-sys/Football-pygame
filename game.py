@@ -12,21 +12,25 @@ HEIGHT = 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("football")
  
-soccer_field_surf = pygame.image.load("./img/soccer-field.jpg")
-
+soccer_field_surf = pygame.image.load("./img/soccer-field.jpg").convert()
+ 
 goal1_surf = pygame.image.load("./img/goal.png").convert_alpha()
 goal1_rect = goal1_surf.get_rect(center=(50,275))
-
+ 
 goal2_surf = pygame.image.load("./img/goal.png").convert_alpha()
-goal2_surf = pygame.transform.flip(goal2_surf,True,False).convert_alpha()
+goal2_surf = pygame.transform.flip(goal2_surf,True,False)
 goal2_rect = goal2_surf.get_rect(center=(1050,275))
+ 
 
+kick_sound = pygame.mixer.Sound("./sounds/kick.mp3")
+kick_sound.set_volume(0.6)
+ 
 score = 0
 score2 = 0
  
 GOAL_WIDTH = 40
 GOAL_HEIGHT = 120
-
+ 
 clock = pygame.time.Clock()
  
 blue = (0,0,255)
@@ -42,16 +46,16 @@ player_keys2 = {"left":pygame.K_LEFT,"up":pygame.K_UP,
  
 player1 = Player(x=450, y=300, keys=player_keys1, look=1)
 player2 = Player(x=650, y=300, keys=player_keys2, look=-1)
-
+ 
 def reset(ball):
     ball.pos = pygame.math.Vector2(WIDTH//2,HEIGHT//2)
     ball.velocity = pygame.math.Vector2(0,0)
     ball.owner = None
     player1.rect.center = (450,300)
     player2.rect.center = (650,300)
-    
  
-TACKLE_COOLDOWN_FRAMES = 40  
+ 
+TACKLE_COOLDOWN_FRAMES = 40
  
 def catch_ball(player, ball):
     if ball.owner is player:
@@ -61,10 +65,8 @@ def catch_ball(player, ball):
     if player.rect.colliderect(ball.rect):
         ball.owner = player
         ball.velocity = pygame.math.Vector2(0, 0)
-        ball.catch_cooldown = TACKLE_COOLDOWN_FRAMES 
-
-
-
+        ball.catch_cooldown = TACKLE_COOLDOWN_FRAMES
+ 
 font = pygame.font.Font(None, 36)
 text_surf_1 = font.render("1-ый Игрок: 0",True,(0,0,0))
 text_surf_2 = font.render("2-ый Игрок: 0",True,(0,0,0))
@@ -77,9 +79,13 @@ while True:
  
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
+                if ball.owner is player1:
+                    kick_sound.play()
                 ball.kick_ball(player1)
  
             if event.key == pygame.K_RETURN:
+                if ball.owner is player2:
+                    kick_sound.play()
                 ball.kick_ball(player2)
  
     key_pressed = pygame.key.get_pressed()
@@ -88,15 +94,15 @@ while True:
     ball.update()
     catch_ball(player1, ball)
     catch_ball(player2, ball)
-
+ 
     if ball.rect.colliderect(goal1_rect):
         score += 1
  
         print(score)
         text_surf_2 = font.render(f"2-ый Игрок:{score}",True,(0,0,0))
         reset(ball)
-        
-
+ 
+ 
  
     if ball.rect.colliderect(goal2_rect):
         score2 += 1
@@ -104,14 +110,14 @@ while True:
         print(score2)
         text_surf_1 = font.render(f"1-ый Игрок: {score2}",True,(0,0,0))
         reset(ball)
-
+ 
  
     """ ОТРИСОВКА """
     screen.blit(soccer_field_surf,(0,0))
-
-    screen.blit(goal1_surf,goal1_rect)    
+ 
+    screen.blit(goal1_surf,goal1_rect)
     screen.blit(goal2_surf,goal2_rect)
-    
+ 
     player1.draw(screen=screen, color=blue)
  
     player2.draw(screen=screen, color=red )
